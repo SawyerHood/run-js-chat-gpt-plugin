@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: JavaScript Code Execution API
+  version: 1.0.0
+  description: An API to execute JavaScript code snippets.
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /javascript/run:
+    post:
+      summary: Execute a JavaScript code snippet.
+      description: Given a snippet of Javascript code evaluate it and return the result.
+      operationId: runJavascript
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+              properties:
+                code:
+                  type: string
+                  description: The JavaScript code snippet to execute.
+      responses:
+        200:
+          description: Code execution was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    oneOf:
+                      - type: string
+                      - type: number
+                      - type: integer
+                      - type: boolean
+                      - type: array
+                      - type: object
+                    description: The result of the executed JavaScript code.
+                  error:
+                    nullable: true
+                    description: An error occurred during execution, should be null in this case.
+        500:
+          description: An error occurred during code execution.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The error message received during code execution.
+                  result:
+                    nullable: true
+                    description: The result of the executed JavaScript code, should be null in this case.

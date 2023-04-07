@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Run Javascript",
+  "name_for_model": "javascript_code_execution",
+  "description_for_human": "Plugin for executing JavaScript code snippets. Submit JS and receive the execution result or error message.",
+  "description_for_model": "Plugin for executing JavaScript code snippets. Submit JS code sand receive the execution result or error message.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "http://localhost:3000/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "http://localhost:3000/logo.png",
+  "contact_email": "kirbyhood@gmail.com",
+  "legal_info_url": "http://www.example.com/legal"
+}
