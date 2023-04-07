@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { Worker } from "worker_threads";
 
 dotenv.config();
 
@@ -16,13 +17,23 @@ app.post(
   async (req: Request<void, { code: string }>, res: Response) => {
     const { code } = req.body;
 
-    try {
-      const result = globalThis.eval(code);
-      res.status(200).json({ result, error: null });
-    } catch (e) {
-      console.error(e);
-      return res.status(500).json({ error: (e as any).message, result: null });
-    }
+    // Create a new worker thread to run the third-party code
+    const worker = new Worker("./dist/worker.js", {
+      workerData: { code },
+    });
+
+    // Listen for messages from the worker
+    worker.on("message", (result) => {
+      if (result.error) {
+        return res.status(500).json({ error: result.error, result: null });
+      }
+      return res.status(200).json({ result: result.value, error: null });
+    });
+
+    // Listen for errors from the worker
+    worker.on("error", (error) => {
+      return res.status(500).json({ error: error.message, result: null });
+    });
   }
 );
 
